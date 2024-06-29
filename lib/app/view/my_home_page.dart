@@ -9,14 +9,6 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pagina Inicial'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.arrow_forward),
-            onPressed: () {
-              Navigator.of(context).pushNamed('subject-list');
-            },
-          )
-        ],
       ),
       body: Column(
         children: [
@@ -40,7 +32,7 @@ class MyHomePage extends StatelessWidget {
           SizedBox(height: 30),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/option2');
+              Navigator.pushNamed(context, MyApp.HOURS_LIST);
             },
             child: Container(
               color: Colors.blue,
