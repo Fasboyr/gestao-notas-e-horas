@@ -1,105 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:gestao_notas_horas/app/database/sqlite/dao/subject_dao_impl.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gestao_notas_horas/app/domain/entities/subject.dart';
 import 'package:gestao_notas_horas/app/my_app.dart';
+import 'package:gestao_notas_horas/app/view/subject_list_back.dart';
 
 class SubjectList extends StatelessWidget {
-  Future<List<Subject>> _search() async {
-    return SubjectDAOImpl().find();
+  final _back = SubjectListBack();
+
+
+   CircleAvatar circleAvatar(String? url) {
+    if (url != null && Uri.tryParse(url) != null && Uri.tryParse(url)!.isAbsolute) {
+      return CircleAvatar(backgroundImage: NetworkImage(url));
+    } else {
+      return CircleAvatar(child: Icon(Icons.book));
+    }
+  }
+
+
+   Widget iconEditButton(void Function()? onPressed) {
+    return IconButton(
+        icon: Icon(Icons.edit), color: Colors.orange, onPressed: onPressed);
+  }
+
+
+  Widget iconRemoveButton(BuildContext context, void Function()? remove) {
+    return IconButton(
+        icon: Icon(Icons.delete),
+        color: Colors.red,
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text('Excluir'),
+                    content: Text('Confirma a Exclusão?'),
+                    actions: [
+                      TextButton(
+                        child: Text('Não'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: Text('Sim'),
+                        onPressed: remove,
+                      ),
+                    ],
+                  ));
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _search(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Lista de Matérias'),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM);
-                  },
-                )
-              ],
-            ),
-            body: Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Lista de Matérias'),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM);
-                  },
-                )
-              ],
-            ),
-            body: Center(child: Text('Erro: ${snapshot.error}')),
-          );
-        } else if (snapshot.hasData) {
-          List<Subject> lista = snapshot.data as List<Subject>;
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Lista de Matérias'),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM);
-                  },
-                )
-              ],
-            ),
-            body: ListView.builder(
-              itemCount: lista.length,
-              itemBuilder: (context, i) {
-                var materia = lista[i];
-                var avatar = CircleAvatar(
-                  backgroundImage: NetworkImage(materia.urlAvatar!),
-                );
-                return ListTile(
-                  leading: avatar,
-                  title: Text(materia.nome!),
-                  subtitle: Text('Média de Notas: ${materia.media}'),
-                  trailing: Container(
-                    width: 100,
-                    child: Row(
-                      children: [
-                        IconButton(onPressed: null, icon: Icon(Icons.edit)),
-                        IconButton(onPressed: null, icon: Icon(Icons.delete))
-                      ],
-                    ),
-                  ),
-                );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Lista de Matérias'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM);
               },
-            ),
-          );
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Lista de Matérias'),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM);
-                  },
-                )
-              ],
-            ),
-            body: Center(child: Text('Nenhum dado disponível')),
-          );
-        }
-      },
-    );
+            )
+          ],
+        ),
+        body: Observer(builder: (context) {
+          return FutureBuilder(
+              future: _back.list,
+              builder: (context, futuro) {
+                if (!futuro.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  List<Subject>? lista = futuro.data;
+                  return ListView.builder(
+                    itemCount: lista?.length,
+                    itemBuilder: (context, i) {
+                      var materia = lista![i];
+                      
+                      return ListTile(
+                        leading: circleAvatar(materia.urlAvatar),
+                        title: Text(materia.nome!),
+                       subtitle: Text('Média de Notas: ${materia.media?.toStringAsFixed(1)}'),
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              iconEditButton((){
+                                _back.goToForm(context, materia);
+                              }),
+                              iconRemoveButton(context, () {
+                                _back.remove(materia.id!);
+                                Navigator.of(context).pop();
+                              })
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              });
+        }));
   }
 }
-
-

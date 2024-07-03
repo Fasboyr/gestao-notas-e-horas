@@ -14,12 +14,12 @@ class SubjectDAOImpl implements SubjectDAO{
       var linha = resultado[i];
       return Subject(
         id: linha['id'] as int? ?? 0, 
-        nome: linha['nome'] as String,
-        nota1: linha['nota1'] as double,
-        nota2: linha['nota2'] as double,
-        nota3: linha['nota3'] as double,
-        media: linha['media'] as double,
-        urlAvatar: linha['url_avatar'] as String,
+        nome: linha['nome'],
+        nota1: linha['nota1'] as double? ?? 0,
+        nota2: linha['nota2'] as double? ?? 0,
+        nota3: linha['nota3'] as double? ?? 0,
+        media: linha['media'] as double? ?? 0,
+        urlAvatar: linha['url_avatar'],
       );
     });
 
@@ -36,7 +36,7 @@ class SubjectDAOImpl implements SubjectDAO{
     _db = (await Connection.get())!;
     var sql;
     if (subject.id == null) {
-      sql = 'INSERT INTO subject (nome,url_avatar) VALUES (?,?)';
+      sql = 'INSERT INTO subject (nome, url_avatar) VALUES (?,?)';
       await _db!.rawInsert(sql, [subject.nome,subject.urlAvatar]);
     } else {
       sql = 'UPDATE subject SET nome = ?, nota1 = ?, nota2 = ?, nota3 = ?, media = ?, url_avatar = ? WHERE id = ?';

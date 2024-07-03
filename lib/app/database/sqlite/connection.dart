@@ -9,7 +9,7 @@ class Connection {
     if (_db == null) {
   
       var path = join(await getDatabasesPath(), 'banco_horas_e_notas');
-      deleteDatabase(path);
+      //deleteDatabase(path);
       _db = await openDatabase(
         path,
         version: 1,

@@ -1,5 +1,5 @@
 class Subject{
-  int? id;
+  dynamic id;
   String? nome;
   double? nota1;
   double? nota2;

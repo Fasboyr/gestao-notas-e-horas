@@ -25,6 +25,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      routes: {
+        HOME : (context) => MyHomePage(),
+        SUBJECT_LIST :(context) => SubjectList(),
+        SUBJECT_FORM :(context) => SubjectForm(),
+        HOURS_LIST  :(context) =>  HoursList(),
+        CERTIFICATE_FORM   :(context) =>  CertificateForm(),
+      },
       onGenerateRoute: (settings) {
         if (settings.name == CERTIFICATE_LIST) {
           final args = settings.arguments as Map<String, String>;
@@ -33,20 +40,6 @@ class MyApp extends StatelessWidget {
               return CertificateList(groupName: args['groupName']!);
             },
           );
-        }
-        switch (settings.name) {
-          case HOME:
-            return MaterialPageRoute(builder: (context) => MyHomePage());
-          case SUBJECT_LIST:
-            return MaterialPageRoute(builder: (context) => SubjectList());
-          case SUBJECT_FORM:
-            return MaterialPageRoute(builder: (context) => SubjectForm());
-          case HOURS_LIST:
-            return MaterialPageRoute(builder: (context) => HoursList());
-          case CERTIFICATE_FORM:
-            return MaterialPageRoute(builder: (context) => CertificateForm());
-          default:
-            return null;
         }
       },
     );

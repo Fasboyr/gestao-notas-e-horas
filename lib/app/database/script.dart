@@ -2,13 +2,13 @@
 
 const String createTableSubject = '''
 CREATE TABLE subject(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY ,
   nome VARCHAR(200) NOT NULL,
-  nota1 REAL NOT NULL,
-  nota2 REAL NOT NULL,
-  nota3 REAL NOT NULL,
-  media REAL NOT NULL,
-  url_avatar VARCHAR(300) NOT NULL
+  nota1 REAL NOT NULL DEFAULT 0,
+  nota2 REAL NOT NULL DEFAULT 0,
+  nota3 REAL NOT NULL DEFAULT 0,
+  media REAL NOT NULL DEFAULT 0,
+  url_avatar VARCHAR(300)
 )
 ''';
 
@@ -37,7 +37,7 @@ VALUES ('Química', 6.0, 7.8, 8.0, 7.2, 'https://cdn.pixabay.com/photo/2017/01/3
 
 const createTableHours = '''
   CREATE TABLE hours(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY,
     nome VARCHAR(200) NOT NULL,
     hora_necessario INT NOT NULL,
     hora_registrada DOUBLE NOT NULL,
@@ -65,7 +65,7 @@ VALUES ('Grupo 3 - Social', 40, 0, 'https://cdn.pixabay.com/photo/2016/03/31/19/
 
 const createTableCertificate = '''
   CREATE TABLE certificate(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY,
     nome VARCHAR(200) NOT NULL,
     descricao VARCHAR(200) NOT NULL,
     hora_certificada DOUBLE NOT NULL,
