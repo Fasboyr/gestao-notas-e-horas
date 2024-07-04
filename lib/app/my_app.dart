@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gestao_notas_horas/app/view/certificate_form.dart';
-import 'package:gestao_notas_horas/app/view/certificate_list.dart';
-import 'package:gestao_notas_horas/app/view/hours_list.dart';
+import 'package:gestao_notas_horas/app/view/certificate/certificate_form.dart';
+import 'package:gestao_notas_horas/app/view/certificate/certificate_list.dart';
+import 'package:gestao_notas_horas/app/view/hours/hours_list.dart';
 import 'package:gestao_notas_horas/app/view/my_home_page.dart';
-import 'package:gestao_notas_horas/app/view/subject_form.dart';
-import 'package:gestao_notas_horas/app/view/subject_list.dart';
+import 'package:gestao_notas_horas/app/view/subject/subject_form.dart';
+import 'package:gestao_notas_horas/app/view/subject/subject_list.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         SUBJECT_LIST :(context) => SubjectList(),
         SUBJECT_FORM :(context) => SubjectForm(),
         HOURS_LIST  :(context) =>  HoursList(),
-        CERTIFICATE_FORM   :(context) =>  CertificateForm(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == CERTIFICATE_LIST) {
@@ -38,6 +37,13 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) {
               return CertificateList(groupName: args['groupName']!);
+            },
+          );
+        }else if(settings.name == CERTIFICATE_FORM){
+           final args = settings.arguments as Map<String, String>;
+          return MaterialPageRoute(
+            builder: (context) {
+              return CertificateForm(args['groupName']!);
             },
           );
         }

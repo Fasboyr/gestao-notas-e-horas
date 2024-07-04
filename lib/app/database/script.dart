@@ -40,7 +40,7 @@ const createTableHours = '''
     id INTEGER NOT NULL PRIMARY KEY,
     nome VARCHAR(200) NOT NULL,
     hora_necessario INT NOT NULL,
-    hora_registrada DOUBLE NOT NULL,
+    hora_registrada DOUBLE NOT NULL DEFAULT 0,
     url_avatar VARCHAR(300) NOT NULL 
   )
 ''';
@@ -68,7 +68,7 @@ const createTableCertificate = '''
     id INTEGER NOT NULL PRIMARY KEY,
     nome VARCHAR(200) NOT NULL,
     descricao VARCHAR(200) NOT NULL,
-    hora_certificada DOUBLE NOT NULL,
+    hora_certificada DOUBLE NOT NULL DEFAULT 0,
     grupo VARCHAR(25) NOT NULL,
     url_avatar VARCHAR(300) NOT NULL 
   )

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gestao_notas_horas/app/domain/entities/subject.dart';
 import 'package:gestao_notas_horas/app/my_app.dart';
-import 'package:gestao_notas_horas/app/view/subject_list_back.dart';
+import 'package:gestao_notas_horas/app/view/subject/subject_list_back.dart';
 
 class SubjectList extends StatelessWidget {
   final _back = SubjectListBack();

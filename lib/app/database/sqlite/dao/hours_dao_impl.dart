@@ -24,9 +24,9 @@ class HoursDAOImpl implements HoursDAO{
   }
 
   @override
-  Future<void> updateHours(String groupName, double newHours) async {
+  Future<void> updateHours(Hours hours) async {
     _db = (await Connection.get())!;
     var sql = 'UPDATE hours SET hora_registrada = ? WHERE nome = ?';
-    await _db!.rawUpdate(sql, [newHours, groupName]);
+    await _db!.rawUpdate(sql, [hours.horaRegistrada, hours.nome]);
   }
 }

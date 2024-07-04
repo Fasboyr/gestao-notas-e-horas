@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestao_notas_horas/app/view/subject_form_back.dart';
+import 'package:gestao_notas_horas/app/view/subject/subject_form_back.dart';
 import 'package:path/path.dart';
 
 class SubjectForm extends StatelessWidget {
@@ -24,9 +24,7 @@ class SubjectForm extends StatelessWidget {
 
   Widget fieldNota2(SubjectFormBack back) {
     return TextFormField(
-        validator: (value) {
-          return back.validateNote2(value);
-        },
+       validator: back.validateNote2,
         onSaved: (newValue) {
           back.subject.nota2 = double.tryParse(newValue!);
         },
@@ -37,7 +35,7 @@ class SubjectForm extends StatelessWidget {
 
   Widget fieldNota3(SubjectFormBack back) {
     return TextFormField(
-        validator: (value) => back.validateNote3(value),
+        validator: back.validateNote3,
         onSaved: (newValue) => back.subject.nota3 = double.tryParse(newValue!),
         initialValue: back.subject.nota3.toString(),
         keyboardType: TextInputType.number,
@@ -46,8 +44,7 @@ class SubjectForm extends StatelessWidget {
 
   Widget fieldURLImage(SubjectFormBack back) {
     return TextFormField(
-        /*onSaved: (newValue) => back.contact.urlAvatar= newValue,
-      initialValue: back.contact.urlAvatar,*/
+      onSaved: (newValue) => back.subject.urlAvatar= newValue,
         initialValue: back.subject.urlAvatar,
         decoration: InputDecoration(
             labelText: 'Endereço Foto:', hintText: 'http://www.site.com'));

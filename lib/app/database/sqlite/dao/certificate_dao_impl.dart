@@ -9,7 +9,7 @@ class CertificateDAOImpl implements CertificateDAO{
 
   Future<List<Certificate>> find() async {
     _db = (await Connection.get())!;
-    List<Map<String, dynamic>> resultado = await _db!.query('subject');
+    List<Map<String, dynamic>> resultado = await _db!.query('certificate');
     List<Certificate> lista = List.generate(resultado.length, (i) {
       var linha = resultado[i];
       return Certificate(
@@ -34,10 +34,10 @@ class CertificateDAOImpl implements CertificateDAO{
     _db = (await Connection.get())!;
     var sql;
     if (certificate.id == null) {
-      sql = 'INSERT INTO subject (nome, descricao, hora_certificada, grupo, url_avatar) VALUES (?,?,?,?,?)';
+      sql = 'INSERT INTO certificate (nome, descricao, hora_certificada, grupo, url_avatar) VALUES (?,?,?,?,?)';
       await _db!.rawInsert(sql, [certificate.nome, certificate.descricao, certificate.horaCertificada, certificate.grupo, certificate.urlAvatar]);
     } else {
-      sql = 'UPDATE subject SET nome = ?, descricao = ?, hora_certificada = ?, grupo = ?, url_avatar = ? WHERE id = ?';
+      sql = 'UPDATE certificate SET nome = ?, descricao = ?, hora_certificada = ?, grupo = ?, url_avatar = ? WHERE id = ?';
       await _db!.rawUpdate(sql, [certificate.nome, certificate.descricao, certificate.horaCertificada, certificate.grupo, certificate.urlAvatar, certificate.id]);
     }
   }
