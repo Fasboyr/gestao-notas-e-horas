@@ -8,28 +8,26 @@ import 'package:mobx/mobx.dart';
 
 part 'certificate_list_back.g.dart';
 
-
 class CertificateListBack = _CertificateListBack with _$CertificateListBack;
 
-
-abstract class _CertificateListBack with Store{
+abstract class _CertificateListBack with Store {
   var _service = GetIt.I.get<CertificateService>();
-
 
   @observable
   Future<List<Certificate>>? list;
 
   @action
-  refreshList([dynamic value]){
+  refreshList([dynamic value]) {
     list = _service.find();
   }
 
-  _CertificateListBack(){
+  _CertificateListBack() {
     refreshList();
   }
 
-  goToForm(BuildContext context,[Certificate? certificate]){
-     Navigator.of(context).push(MaterialPageRoute(builder: (context) => CertificateForm()));
+  goToForm(BuildContext context, [Certificate? certificate]){
+    Navigator.of(context).pushNamed(MyApp.CERTIFICATE_FORM, arguments: certificate,).then(refreshList);
+    print('Subject pushed with name: ${certificate!.nome}');
   }
 
 /*
@@ -41,5 +39,4 @@ abstract class _CertificateListBack with Store{
     _service.remove(id);
     refreshList();
   }
-
 }

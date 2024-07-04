@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:gestao_notas_horas/app/domain/entities/certificate.dart';
 import 'package:gestao_notas_horas/app/view/certificate/certificate_form_back.dart';
 
 class CertificateForm extends StatelessWidget {
+  /*
+  final Certificate? certificate;
   final String groupName;
 
-  CertificateForm([this.groupName = 'Grupo']);
-  
+  CertificateForm({this.groupName = 'Grupo', this.certificate});
+  */
   final _form = GlobalKey<FormState>();
 
   Widget fieldName(CertificateFormBack back) {
@@ -29,7 +32,7 @@ class CertificateForm extends StatelessWidget {
     return TextFormField(
       validator: back.validateGroupName,
         onSaved: (newValue) => back.certificate.grupo = newValue,
-        initialValue: groupName,
+        initialValue: back.certificate.grupo,
          decoration: InputDecoration(labelText: 'Grupo:'));
   }
 
@@ -55,6 +58,7 @@ class CertificateForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _back = CertificateFormBack(context);
+    print(_back.certificate.nome);
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Certificados'),
@@ -79,11 +83,14 @@ class CertificateForm extends StatelessWidget {
             children: [
               fieldName(_back),
               fieldDescription(_back),
+              /*
               if(_back.isNewSubject) ...[
                 fieldGroupName(_back, groupName),
               ] else ...[
                 fieldGroupName(_back)
               ],
+              */
+              fieldGroupName(_back),
               fieldHoursCertificate(_back),
               fieldURLImage(_back),
             ],

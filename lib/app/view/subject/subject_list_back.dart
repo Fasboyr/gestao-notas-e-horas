@@ -28,7 +28,7 @@ abstract class _SubjectListBack with Store{
   }
 
   goToForm(BuildContext context, [Subject? subject]){
-    Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM, arguments: subject).then(refreshList);
+    Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM, arguments: subject,).then(refreshList);
     print('Subject pushed with name: ${subject!.nome}');
   }
 

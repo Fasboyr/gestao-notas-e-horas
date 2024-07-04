@@ -61,7 +61,8 @@ class CertificateList extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => CertificateForm(groupName)));
+                Navigator.of(context).pushNamed(MyApp.CERTIFICATE_FORM);
+                //Navigator.of(context).push(MaterialPageRoute(builder: (context) => CertificateForm(groupName: groupName)));
               },
             )
           ],
@@ -90,7 +91,9 @@ class CertificateList extends StatelessWidget {
                           child: Row(
                             children: [
                               iconEditButton((){
+                                print('Executando backToForm para editar');
                                 _back.goToForm(context,certificado);
+                        
                               }),
                               iconRemoveButton(context, () {
                                 _back.remove(certificado.id!);
