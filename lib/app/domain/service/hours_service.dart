@@ -16,22 +16,40 @@ class HoursService{
     return _dao.find();
   }
 
-  validateHours(String? groupName, double? newHours, double? hoursRegistered){
-    var totalHours = newHours! + hoursRegistered!;
-    if(groupName == 'Grupo 1 - Ensino'){
-      if(hoursRegistered == 150){
+  validateHours(Hours hours, double? newHours,[double? originalHours]){
+    double totalHours;
+    if(originalHours == null){
+      totalHours = newHours! + hours.horaRegistrada!; // se for o primeiro cadastro de horas, apenas adiciona ao total de horas registradas
+    }else{
+      if(originalHours > newHours!){
+        newHours = originalHours - newHours; // ex original = 5 e novo = 3, reduz a hora registrada em 2
+        totalHours = (hours.horaRegistrada! - newHours);
+      }else{
+        newHours = newHours - originalHours; // ex: novo = 5 e original = 3, aumenta a hora registrada em 2
+        totalHours = (hours.horaRegistrada! + newHours);
+      }
+    }
+    double aboveLimitHour;
+    double adjusteCertificatedHours;
+    if(hours.nome == 'Grupo 1 - Ensino'){
+      if(hours.horaRegistrada == 150){
         throw DomainLayerException('Horas necessárias atingidas, impossível registrar mais');
       }else if(totalHours >= 150){
+        aboveLimitHour = totalHours - 150; //Ex: a hora está a 140, adiciona um certificado de 15 horas, reduz a hora total pelo limite permitido para saber o quanto passou do limite;
+        adjusteCertificatedHours = newHours - aboveLimitHour; // Ex: passou do limite por 5, então reduz a nova hora para 10, depois retorna o total de horas e o novo valor do certificado.
         totalHours = 150;
+        return [totalHours, adjusteCertificatedHours];
       }
-      return totalHours;
-    }else if(groupName == 'Grupo 2 - Extensão' || groupName == 'Grupo 3 - Social'){
-      if(hoursRegistered == 40){
+    }else if(hours.nome == 'Grupo 2 - Extensão' || hours.nome == 'Grupo 3 - Social'){
+      if(hours.horaRegistrada == 40){
         throw DomainLayerException('Horas necessárias atingidas, impossível registrar mais');
       }else if(totalHours > 40){
+        aboveLimitHour = totalHours - 40;
+        adjusteCertificatedHours = newHours - aboveLimitHour;
         totalHours = 40;
+        return [totalHours, adjusteCertificatedHours];
       }
-      return totalHours;
+
     }else{
       throw DomainLayerException('Nome do grupo inválido');
     }

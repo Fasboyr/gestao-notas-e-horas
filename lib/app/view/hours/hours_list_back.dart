@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestao_notas_horas/app/domain/entities/hours.dart';
 import 'package:gestao_notas_horas/app/domain/service/hours_service.dart';
+import 'package:gestao_notas_horas/app/my_app.dart';
 import 'package:gestao_notas_horas/app/view/certificate/certificate_list.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -27,8 +28,8 @@ abstract class _HoursListBack with Store{
     refreshList();
   }
 
-  goToList(BuildContext context, [Hours? hours]){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => CertificateList(groupName: hours!.nome as String)));
+   goToList(BuildContext context, [Hours? hours]){
+    Navigator.of(context).pushNamed(MyApp.CERTIFICATE_LIST, arguments: hours,).then(refreshList);
   }
 
 /*

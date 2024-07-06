@@ -31,17 +31,20 @@ class MyApp extends StatelessWidget {
         SUBJECT_LIST: (context) => SubjectList(),
         SUBJECT_FORM: (context) => SubjectForm(),
         HOURS_LIST: (context) => HoursList(),
+        CERTIFICATE_LIST: (context) => CertificateList(),
         CERTIFICATE_FORM: (context) => CertificateForm(),
+        
       },
+      /*
       onGenerateRoute: (settings) {
         if (settings.name == CERTIFICATE_LIST) {
           final args = settings.arguments as Map<String, String>;
           return MaterialPageRoute(
             builder: (context) {
-              return CertificateList(groupName: args['groupName']!);
+              return CertificateList(hours: args['groupName']!);
             },
           );
-        } /*else if (settings.name == CERTIFICATE_FORM) {
+        } else if (settings.name == CERTIFICATE_FORM) {
           final args = settings.arguments as Map<String, String>;
           final Certificate? certificate = args['subject'] as Certificate?;
           final String? groupName = args['groupName'] as String?;
@@ -49,8 +52,8 @@ class MyApp extends StatelessWidget {
             builder: (context) =>
                 CertificateForm(groupName: groupName as String, certificate: certificate,),
           );
-        }*/
-      },
+        }
+      },*/
     );
   }
 }

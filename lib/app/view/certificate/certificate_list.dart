@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:gestao_notas_horas/app/domain/entities/certificate.dart';
+import 'package:gestao_notas_horas/app/domain/entities/hours.dart';
+import 'package:gestao_notas_horas/app/domain/service/hours_service.dart';
 import 'package:gestao_notas_horas/app/my_app.dart';
-import 'package:gestao_notas_horas/app/view/certificate/certificate_form.dart';
+import 'package:gestao_notas_horas/app/view/certificate/DTO/certificate_dto.dart';
 import 'package:gestao_notas_horas/app/view/certificate/certificate_list_back.dart';
+import 'package:gestao_notas_horas/app/view/hours/hours_list_back.dart';
 
 class CertificateList extends StatelessWidget {
   final _back = CertificateListBack();
-  final String groupName;
 
-  CertificateList({required this.groupName});
-
-   CircleAvatar circleAvatar(String? url) {
+  CircleAvatar circleAvatar(String? url) {
     if (url != null && Uri.tryParse(url)?.isAbsolute == true) {
       return CircleAvatar(backgroundImage: NetworkImage(url));
     } else {
@@ -19,11 +19,10 @@ class CertificateList extends StatelessWidget {
     }
   }
 
-   Widget iconEditButton(void Function()? onPressed) {
+  Widget iconEditButton(void Function()? onPressed) {
     return IconButton(
         icon: Icon(Icons.edit), color: Colors.orange, onPressed: onPressed);
   }
-
 
   Widget iconRemoveButton(BuildContext context, void Function()? remove) {
     return IconButton(
@@ -51,23 +50,50 @@ class CertificateList extends StatelessWidget {
         });
   }
 
+  Widget iconAddButton(BuildContext context, Hours horas) {
+    return IconButton(
+      icon: Icon(Icons.add),
+      onPressed: () {
+        if ((horas.nome == 'Grupo 1 - Ensino' && horas.horaRegistrada! >= 150) ||
+            ((horas.nome == 'Grupo 2 - Extensão' ||
+                    horas.nome == 'Grupo 3 - Social') &&
+                horas.horaRegistrada! >= 40)) {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text('Limite Alcançado'),
+                    content: Text(
+                        'Você atingiu o limite máximo de horas para esse grupo'),
+                    actions: [
+                      TextButton(
+                        child: Text('Entendido'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ));
+        } else {
+          var dtoNew = CertificateDTO(hours: horas);
+          Navigator.of(context)
+              .pushNamed(MyApp.CERTIFICATE_FORM, arguments: dtoNew);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    var parameter = ModalRoute.of(context)!.settings.arguments;
+    var horas = parameter as Hours;
     return Scaffold(
         appBar: AppBar(
           title: Text('Lista de Certificados'),
           actions: [
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.of(context).pushNamed(MyApp.CERTIFICATE_FORM);
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context) => CertificateForm(groupName: groupName)));
-              },
-            )
+            iconAddButton(context, horas),
           ],
         ),
-        body:  Observer(builder: (context) {
+        body: Observer(builder: (context) {
           return FutureBuilder(
               future: _back.list,
               builder: (context, futuro) {
@@ -75,28 +101,40 @@ class CertificateList extends StatelessWidget {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   List<Certificate>? lista = futuro.data;
-                  var filteredList =lista!.where((certificate) => certificate.grupo == groupName).toList();
+                  var filteredList = lista!
+                      .where((certificate) => certificate.grupo == horas.nome)
+                      .toList();
+                  double totalHorasCertificadas = 0.0;
+                  for (var certificado in filteredList) {
+                    totalHorasCertificadas += certificado.horaCertificada!;
+                  }
+                  horas.horaRegistrada = totalHorasCertificadas;
 
                   return ListView.builder(
                     itemCount: filteredList?.length,
                     itemBuilder: (context, i) {
                       var certificado = filteredList![i];
-                      
+
                       return ListTile(
                         leading: circleAvatar(certificado.urlAvatar),
                         title: Text(certificado.nome!),
-                       subtitle: Text('Horas certificadas: ${certificado.horaCertificada?.toStringAsFixed(1)}'),
+                        subtitle: Text(
+                            'Horas certificadas: ${certificado.horaCertificada?.toStringAsFixed(1)}'),
                         trailing: SizedBox(
                           width: 100,
                           child: Row(
                             children: [
-                              iconEditButton((){
-                                print('Executando backToForm para editar');
-                                _back.goToForm(context,certificado);
-                        
+                              iconEditButton(() {
+                                var dto = CertificateDTO(
+                                    certificate: certificado, hours: horas);
+                                _back.goToForm(context, dto);
                               }),
                               iconRemoveButton(context, () {
+                                horas.horaRegistrada = (horas.horaRegistrada! -
+                                    certificado.horaCertificada!);
                                 _back.remove(certificado.id!);
+                                var hourBack = HoursService();
+                                hourBack.updateHour(horas);
                                 Navigator.of(context).pop();
                               })
                             ],
@@ -110,4 +148,3 @@ class CertificateList extends StatelessWidget {
         }));
   }
 }
-

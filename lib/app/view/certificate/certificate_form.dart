@@ -1,56 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:gestao_notas_horas/app/domain/entities/certificate.dart';
+import 'package:gestao_notas_horas/app/view/certificate/DTO/certificate_dto.dart';
 import 'package:gestao_notas_horas/app/view/certificate/certificate_form_back.dart';
 
 class CertificateForm extends StatelessWidget {
-  /*
-  final Certificate? certificate;
-  final String groupName;
 
-  CertificateForm({this.groupName = 'Grupo', this.certificate});
-  */
   final _form = GlobalKey<FormState>();
 
   Widget fieldName(CertificateFormBack back) {
     return TextFormField(
         validator: back.validateName,
-        onSaved: (newValue) => back.certificate.nome = newValue,
-        initialValue: back.certificate.nome,
+        onSaved: (newValue) => back.certificateDTO.certificate?.nome = newValue,
+        initialValue: back.certificateDTO.certificate?.nome,
         decoration: InputDecoration(labelText: 'Nome:'));
   }
 
   Widget fieldDescription(CertificateFormBack back){
     return TextFormField(
       validator: back.validateDescription,
-        onSaved: (newValue) => back.certificate.descricao = newValue,
-        initialValue: back.certificate.descricao,
+        onSaved: (newValue) => back.certificateDTO.certificate?.descricao = newValue,
+        initialValue: back.certificateDTO.certificate?.descricao,
         decoration: InputDecoration(labelText: 'Descrição:'));
   }
 
 
-   Widget fieldGroupName(CertificateFormBack back, [String? groupName]){
+   Widget fieldGroupName(CertificateFormBack back){
     return TextFormField(
       validator: back.validateGroupName,
-        onSaved: (newValue) => back.certificate.grupo = newValue,
-        initialValue: back.certificate.grupo,
+        onSaved: (newValue) => back.certificateDTO.certificate?.grupo = back.certificateDTO.hours?.nome ?? newValue,
+        initialValue: back.certificateDTO.hours?.nome,
          decoration: InputDecoration(labelText: 'Grupo:'));
   }
 
    Widget fieldHoursCertificate(CertificateFormBack back){
     return TextFormField(
-      validator:(value){ 
-        double? hours = double.tryParse(value ?? '');
-        return back.validateHoursCertificate(hours); },
-        onSaved: (newValue) => back.certificate.horaCertificada = double.tryParse(newValue!),
-        initialValue: back.certificate.horaCertificada != null ? back.certificate.horaCertificada.toString() : '',
+      validator:(value){
+        double? newHours = double.tryParse(value ?? ' ');
+        if(back.isNewCertificate){
+           return back.validateHoursCertificate(newHours);
+        } else{
+           return back.validateHoursCertificate(newHours, back.certificateDTO.certificate!.horaCertificada);
+          }
+        },
+        onSaved: (newValue) => back.certificateDTO.certificate?.horaCertificada = double.tryParse(newValue!),
+        initialValue: back.certificateDTO.certificate?.horaCertificada != null ? back.certificateDTO.certificate?.horaCertificada.toString() : ' ',
          keyboardType: TextInputType.number,
         decoration: InputDecoration(labelText: 'Horas Certificadas:'));
   }
 
    Widget fieldURLImage(CertificateFormBack back) {
     return TextFormField(
-      onSaved: (newValue) => back.certificate.urlAvatar= newValue,
-      initialValue: back.certificate.urlAvatar,
+      onSaved: (newValue) => back.certificateDTO.certificate?.urlAvatar = newValue ?? '',
+      initialValue: back.certificateDTO.certificate?.urlAvatar ?? '' ,
       decoration: InputDecoration(
         labelText: 'Endereço Foto:', hintText: 'http://www.site.com'));
   }
@@ -58,7 +59,6 @@ class CertificateForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _back = CertificateFormBack(context);
-    print(_back.certificate.nome);
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Certificados'),
@@ -83,14 +83,7 @@ class CertificateForm extends StatelessWidget {
             children: [
               fieldName(_back),
               fieldDescription(_back),
-              /*
-              if(_back.isNewSubject) ...[
-                fieldGroupName(_back, groupName),
-              ] else ...[
-                fieldGroupName(_back)
-              ],
-              */
-              fieldGroupName(_back),
+              fieldGroupName(_back),          
               fieldHoursCertificate(_back),
               fieldURLImage(_back),
             ],
