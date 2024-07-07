@@ -3,13 +3,9 @@ import 'package:gestao_notas_horas/app/domain/entities/subject.dart';
 import 'package:gestao_notas_horas/app/domain/exception/domain_layer_exception.dart';
 import 'package:gestao_notas_horas/app/domain/service/subject_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 
-part 'subject_form_back.g.dart';
 
-class SubjectFormBack = _SubjectFormBack with _$SubjectFormBack;
-
-abstract class _SubjectFormBack with Store {
+class SubjectFormBack {
   late Subject subject;
   var _service = GetIt.I.get<SubjectService>();
   late bool _nameIsValid;
@@ -21,7 +17,7 @@ abstract class _SubjectFormBack with Store {
   bool get isCreationValid => _nameIsValid;
   bool get isEditionValid => _nameIsValid && _note1IsValid && _note2IsValid && _note3IsValid;
 
-  _SubjectFormBack(BuildContext context) {
+  SubjectFormBack(BuildContext context) {
     var parameter = ModalRoute.of(context)!.settings.arguments;
     subject = (parameter == null) ? Subject() : parameter as Subject;
     isNewSubject = (parameter == null);

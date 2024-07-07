@@ -75,8 +75,7 @@ class CertificateList extends StatelessWidget {
                   ));
         } else {
           var dtoNew = CertificateDTO(hours: horas);
-          Navigator.of(context)
-              .pushNamed(MyApp.CERTIFICATE_FORM, arguments: dtoNew);
+          _back.goToForm(context, dtoNew);
         }
       },
     );
@@ -118,6 +117,9 @@ class CertificateList extends StatelessWidget {
                       return ListTile(
                         leading: circleAvatar(certificado.urlAvatar),
                         title: Text(certificado.nome!),
+                         onTap: (){
+                          _back.goToDetails(context, certificado);
+                        },
                         subtitle: Text(
                             'Horas certificadas: ${certificado.horaCertificada?.toStringAsFixed(1)}'),
                         trailing: SizedBox(

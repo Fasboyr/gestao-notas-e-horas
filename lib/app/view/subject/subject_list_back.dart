@@ -32,11 +32,10 @@ abstract class _SubjectListBack with Store{
     print('Subject pushed with name: ${subject!.nome}');
   }
 
-/*
   goToDetails(BuildContext context, Subject subject){
-    Navigator.of(context).pushNamed(MyApp.CONTACT_DETAILS, arguments: subject);
+    Navigator.of(context).pushNamed(MyApp.SUBJECT_DETAILS, arguments: subject);
   }
-*/
+
   remove(dynamic id) {
     _service.remove(id);
     refreshList();

@@ -58,7 +58,7 @@ class SubjectList extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                Navigator.of(context).pushNamed(MyApp.SUBJECT_FORM);
+                _back.goToForm(context);
               },
             )
           ],
@@ -79,6 +79,9 @@ class SubjectList extends StatelessWidget {
                       return ListTile(
                         leading: circleAvatar(materia.urlAvatar),
                         title: Text(materia.nome!),
+                        onTap: (){
+                         _back.goToDetails(context, materia);
+                        },
                        subtitle: Text('Média de Notas: ${materia.media?.toStringAsFixed(1)}'),
                         trailing: SizedBox(
                           width: 100,

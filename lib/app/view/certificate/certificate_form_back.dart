@@ -6,13 +6,9 @@ import 'package:gestao_notas_horas/app/domain/service/certificate_service.dart';
 import 'package:gestao_notas_horas/app/domain/service/hours_service.dart';
 import 'package:gestao_notas_horas/app/view/certificate/DTO/certificate_dto.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 
-part 'certificate_form_back.g.dart';
 
-class CertificateFormBack = _CertificateFormBack with _$CertificateFormBack;
-
-abstract class _CertificateFormBack with Store {
+class CertificateFormBack{
   late CertificateDTO certificateDTO;
   var _serviceCertificate = GetIt.I.get<CertificateService>();
   var _serviceHours = GetIt.I.get<HoursService>();
@@ -27,7 +23,7 @@ abstract class _CertificateFormBack with Store {
 
   bool get isValid => _nameIsValid && _descriptionIsValid && _groupNameIsValid && _certificateHoursIsValid && _groupHoursIsValid;
 
-   _CertificateFormBack(BuildContext context) {
+   CertificateFormBack(BuildContext context) {
     var parameter = ModalRoute.of(context)!.settings.arguments;
     certificateDTO = parameter as CertificateDTO;
 

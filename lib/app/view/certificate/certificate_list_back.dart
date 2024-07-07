@@ -28,15 +28,13 @@ abstract class _CertificateListBack with Store {
 
   goToForm(BuildContext context, [CertificateDTO? dto]){
     Navigator.of(context).pushNamed(MyApp.CERTIFICATE_FORM, arguments: dto,).then(refreshList);
-    print('Certificate pushed with name: ${dto?.certificate!.nome}');
-    print('Hour pushed with name: ${dto?.hours!.nome}');
   }
 
-/*
+
   goToDetails(BuildContext context, Certificate certificate){
-    Navigator.of(context).pushNamed(MyApp.CONTACT_DETAILS, arguments: certificate);
+    Navigator.of(context).pushNamed(MyApp.CERTIFICATE_DETAILS, arguments: certificate);
   }
-*/
+
   remove(dynamic id) {
     _service.remove(id);
     refreshList();
